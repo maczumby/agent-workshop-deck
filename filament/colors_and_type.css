@@ -1,0 +1,114 @@
+/* =============================================================
+   Filament Design System — Core tokens
+   Source: tamagui config (storybook/tamagui-web.css), famagui package
+   Filament is dark-first. Light theme exists but brand lives in dark.
+   ============================================================= */
+
+/* ---------- Webfonts ----------
+   Brand fonts (NeulisNeue / NeulisSans) are licensed and not bundled in this
+   public copy; Inter, Geist Mono, and a Fraunces display fallback load from
+   Google Fonts in index.html. Headings fall back to Fraunces where Neulis
+   isn't present. */
+
+/* ---------- DARK THEME (DEFAULT) ----------
+   Warm near-black (hue 40°) — NOT cold gray. */
+:root,
+.dark {
+  /* Neutral scale — warm-brown grays */
+  --color1:  hsla(40, 14%,  9%, 1);   /* base bg                    #1B1813 */
+  --color2:  hsla(40, 10%, 13%, 1);   /* surface / panel            #24221D */
+  --color3:  hsla(40,  9%, 17%, 1);   /* hover surface              #2F2C25 */
+  --color4:  hsla(40,  8%, 21%, 1);   /* pressed / button default   #3A362E */
+  --color5:  hsla(40,  8%, 26%, 1);   /* divider                    #474338 */
+  --color6:  hsla(40,  8%, 32%, 1);   /* subtle border              #57513F */
+  --color7:  hsla(40,  7%, 40%, 1);   /* stronger border            #6C6655 */
+  --color8:  hsla(40,  8%, 48%, 1);   /* active border / outline    #817B64 */
+  --color9:  hsla(40,  9%, 56%, 1);   /* icon muted                 #9A9276 */
+  --color10: hsla(46, 12%, 56%, 1);   /* fg muted                   #A09771 */
+  --color11: hsla( 0,  0%, 63%, 1);   /* fg secondary               #A1A1A1 */
+  --color12: #FCF6DC;                 /* fg primary — CREAM (not pure white) */
+
+  /* Brand — "filament" vermillion-orange scale (tamagui --c-filamentN). */
+  --filament1:  #A63612;
+  --filament2:  #AF3913;
+  --filament3:  #BD3E14;
+  --filament4:  #C64115;
+  --filament5:  #D04416;
+  --filament6:  #D94717;
+  --filament7:  #E74F1D;
+  --filament8:  #EA683D;
+  --filament9:  #F19779;
+  --filament10: #F3A990;
+  --filament11: #FADBD1;
+  --filament12: #FFFFFF;
+  --filamentText: #FCF6DC;
+  --link-blue:  #6DB0F8;
+  --accent:     var(--link-blue);
+
+  --popupBackground: #333029;
+  --popupSelected:   #434039;
+
+  --whiteA4:  hsla(0, 0%, 100%, 0.056);
+  --whiteA5:  hsla(0, 0%, 100%, 0.086);
+  --whiteA6:  hsla(0, 0%, 100%, 0.124);
+  --whiteA8:  hsla(0, 0%, 100%, 0.249);
+  --whiteA11: hsla(0, 0%, 100%, 0.592);
+  --blackA8:  hsla(0, 0%,   0%, 0.220);
+  --blackA9:  hsla(0, 0%,   0%, 0.439);
+
+  --bg:        var(--color1);
+  --bg-surface:var(--color2);
+  --bg-hover:  var(--color3);
+  --bg-active: var(--color4);
+  --fg:        var(--color12);
+  --fg-muted:  var(--color11);
+  --fg-dim:    var(--color10);
+  --border:    var(--color5);
+  --border-strong: var(--color7);
+  --brand:     var(--filament7);
+  --brand-press: var(--filament4);
+  --on-brand:  var(--filamentText);
+  --accent-press: color-mix(in oklab, var(--accent), black 10%);
+  --on-accent: var(--filamentText);
+}
+
+/* ---------- Type tokens ---------- */
+:root {
+  --font-display:  'NeulisNeue', 'Neulis Neue', 'Fraunces', Georgia, serif;
+  --font-heading:  'NeulisSans', 'Neulis Sans', 'Inter', system-ui, sans-serif;
+  --font-body:     'Inter', -apple-system, system-ui, BlinkMacSystemFont,
+                   'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono:     'Geist Mono', 'JetBrains Mono', ui-monospace,
+                   SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius-0: 0px;
+  --radius-1: 3px;
+  --radius-2: 5px;
+  --radius-3: 7px;
+  --radius-4: 9px;
+  --radius-5: 10px;
+  --radius-6: 16px;
+  --radius-7: 19px;
+  --radius-8: 22px;
+  --radius-9: 26px;
+  --radius-10: 34px;
+  --radius-11: 42px;
+  --radius-12: 50px;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-1: 120ms;
+  --dur-2: 180ms;
+  --dur-3: 240ms;
+  --dur-4: 360ms;
+}
+
+/* ---------- Base elements ---------- */
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
