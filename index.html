@@ -16,6 +16,36 @@
 <style>deck-stage:not(:defined){visibility:hidden}</style>
 </head>
 <body>
+<style id="ws-gate-style">
+#ws-gate{position:fixed;inset:0;z-index:99999;background:var(--color1,#1B1813);display:flex;align-items:center;justify-content:center;padding:24px;font-family:var(--font-body,system-ui);}
+#ws-gate .g-card{width:min(520px,92vw);text-align:left;}
+#ws-gate .g-kicker{font-family:var(--font-mono,monospace);text-transform:uppercase;letter-spacing:.16em;font-size:14px;color:#6DB0F8;margin:0 0 18px;}
+#ws-gate h1{font-family:var(--font-display,Fraunces,Georgia,serif);font-weight:700;font-size:40px;line-height:1.05;color:#FCF6DC;margin:0 0 16px;}
+#ws-gate p.g-sub{font-size:18px;line-height:1.5;color:#A1A1A1;margin:0 0 30px;}
+#ws-gate label{display:block;font-family:var(--font-mono,monospace);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#A09771;margin:0 0 8px;}
+#ws-gate input{width:100%;box-sizing:border-box;background:#24221D;border:1px solid #474338;border-radius:10px;padding:15px 16px;font-size:17px;color:#FCF6DC;font-family:inherit;margin:0 0 18px;}
+#ws-gate input:focus{outline:none;border-color:#6DB0F8;}
+#ws-gate button{width:100%;background:#6DB0F8;color:#0d1b2a;border:none;border-radius:10px;padding:16px;font-size:17px;font-weight:600;cursor:pointer;font-family:var(--font-heading,inherit);}
+#ws-gate button:disabled{opacity:.6;cursor:default;}
+#ws-gate .g-err{color:#EA683D;font-size:15px;margin:0 0 14px;min-height:20px;}
+#ws-gate .g-fine{font-size:13px;color:#6C6655;margin:18px 0 0;line-height:1.4;}
+</style>
+<div id="ws-gate" role="dialog" aria-label="Enter your name and email to view the deck">
+  <div class="g-card">
+    <p class="g-kicker">Filament workshop</p>
+    <h1>Build an agent that&#39;s yours.</h1>
+    <p class="g-sub">Drop your name and email and the deck is yours. It&#39;s how I keep in touch and keep helping after today.</p>
+    <form id="ws-gate-form" novalidate="novalidate">
+      <label for="ws-name">Your name</label>
+      <input id="ws-name" name="name" type="text" autocomplete="name" required="required"></input>
+      <label for="ws-email">Email</label>
+      <input id="ws-email" name="email" type="email" autocomplete="email" required="required"></input>
+      <p class="g-err" id="ws-err"></p>
+      <button type="submit">Open the deck</button>
+    </form>
+    <p class="g-fine">Just your name and a real email. No spam, and you can ask me to delete it anytime.</p>
+  </div>
+</div>
 
 <deck-stage width="1920" height="1080">
 
@@ -894,6 +924,38 @@ WHAT YOU DON'T DO WITHOUT ME
     d.textContent=(img.getAttribute('alt')||'screenshot')+'  \u2014  drop '+(img.getAttribute('src')||'')+' into the repo';
     if(img.parentNode) img.parentNode.replaceChild(d,img);
   }, true);
+</script>
+<script>
+(function(){
+  // Set this to your relay Worker URL so each signup DMs Mari on Filament.
+  // Leave "" and the gate still validates + reveals (nothing is sent).
+  var SIGNUP_ENDPOINT = "";
+  var gate=document.getElementById('ws-gate');
+  if(!gate) return;
+  try{ if(localStorage.getItem('ws_deck_signed')==='1'){ gate.parentNode.removeChild(gate); return; } }catch(e){}
+  var DISPOSABLE=['mailinator.com','guerrillamail.com','10minutemail.com','tempmail.com','temp-mail.org','throwawaymail.com','yopmail.com','trashmail.com','getnada.com','sharklasers.com','maildrop.cc','dispostable.com','fakeinbox.com','mailnesia.com'];
+  var form=document.getElementById('ws-gate-form'), err=document.getElementById('ws-err');
+  function check(email){
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return 'That email doesn’t look right. Mind checking it?';
+    var dom=email.split('@')[1].toLowerCase();
+    if(DISPOSABLE.indexOf(dom)>=0) return 'Please use a real email, not a throwaway — I actually use these to help you after today.';
+    return '';
+  }
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=document.getElementById('ws-name').value.trim();
+    var email=document.getElementById('ws-email').value.trim();
+    if(!name){ err.textContent='Your name, please.'; return; }
+    var v=check(email); if(v){ err.textContent=v; return; }
+    err.textContent='';
+    var btn=form.querySelector('button'); btn.disabled=true; btn.textContent='One sec…';
+    var done=function(){ try{localStorage.setItem('ws_deck_signed','1');}catch(e){} if(gate.parentNode) gate.parentNode.removeChild(gate); };
+    if(SIGNUP_ENDPOINT){
+      fetch(SIGNUP_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,email:email,ts:new Date().toISOString()})}).then(done,done);
+      setTimeout(done,2500); // never trap the viewer if the relay is slow
+    } else { done(); }
+  });
+})();
 </script>
 </body>
 </html>
