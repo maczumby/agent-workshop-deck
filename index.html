@@ -6,12 +6,17 @@
 <title>Agent Workshop — Filament</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700&family=Inter:wght@400;500&family=Geist+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Geist+Mono:wght@500&display=swap">
 <style>
+  @font-face{
+    font-family:'NeulisNeue';
+    src:url('filament/fonts/NeulisNeue-Bold.ttf') format('truetype');
+    font-weight:700; font-display:swap;
+  }
   :root{
     --bg:#1B1813; --surface:#24221D; --border:#474338;
     --fg:#FCF6DC; --muted:#A1A1A1; --dim:#A09771; --accent:#6DB0F8;
-    --sans:'Schibsted Grotesk','Inter',-apple-system,system-ui,sans-serif;
+    --display:'NeulisNeue','Inter',-apple-system,system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -27,7 +32,7 @@
     letter-spacing:.18em; font-size:14px; color:var(--accent); margin:0 0 22px;
   }
   h1{
-    font-family:var(--sans); font-weight:700;
+    font-family:var(--display); font-weight:700;
     font-size:clamp(44px,8vw,84px); line-height:1.03; letter-spacing:-.02em; margin:0;
   }
   .tag{
