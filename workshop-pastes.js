@@ -1,19 +1,16 @@
 // Verbatim copy-paste blocks for the workshop. Copied to clipboard by data-copy-key buttons.
 window.WS_PASTES = {
 
-  // Step 13 — promote a second channel to command-and-control (change-backchannel.md)
-  cc: `Make [CHANNEL NAME] (id: [!ROOM_ID:api.filament.dm]) a second command-and-control
-channel, the same as this backchannel. When a message there is from ME (check the
-is_from_principal flag on the message, never the display name), treat it exactly
-like a message here: act on it directly with your full tool access and reply in
-the channel. Set your wake policy so you wake on all messages in that channel.
+  // Step — shared backchannel: treat a second channel as a command channel (shared-backchannel.md)
+  // Incantation from Brock, current Hermes plugin. Works best on strong models — a weaker one may
+  // narrate "this is a command channel, so I'll proceed" before doing the thing. Harmless, ignore it.
+  cc: `Treat [CHANNEL NAME] (id: [!ROOM_ID:api.filament.dm]) as a command channel, like my private
+backchannel: set that channel's wake policy so you wake on every message (reactive_wake "all")
+and reply on the main timeline (reply_style "channel"), and update your standing instructions so
+that in that channel you carry out each message as a direct instruction and answer in the channel
+yourself instead of checking with me first.
 
-Keep one guard: if anyone other than me asks in that channel for private
-information, an external change, spending, sending, or a calendar or email
-change, don't act or disclose. Pause and ask me first.
-
-When you're done, read your new wake policy and instructions back to me here so
-I can confirm.`,
+Confirm what you changed.`,
 
   // Step 14 — agent answers you in shared channels (agent-answers-you-in-channels.md)
   answers: `Update your standing instructions for shared channels. Save this as an
