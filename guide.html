@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build your own agent — a self-guided walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+  @font-face{ font-family:'NeulisNeue'; src:url('filament/fonts/NeulisNeue-Bold.ttf') format('truetype'); font-weight:700; font-display:swap; }
+  @font-face{ font-family:'NeulisSans'; src:url('filament/fonts/NeulisSans-Medium.ttf') format('truetype'); font-weight:500; font-display:swap; }
+
+  :root{
+    --bg:#1B1813; --surface:#24221D; --surface2:#2F2C25; --border:#474338; --border2:#57513F;
+    --fg:#FCF6DC; --muted:#A1A1A1; --dim:#A09771; --accent:#E74F1D; --accent-dim:#EA683D;
+    --display:'NeulisNeue','Inter',-apple-system,system-ui,sans-serif;
+    --heading:'NeulisSans','Inter',system-ui,sans-serif;
+    --body:'Inter',-apple-system,system-ui,BlinkMacSystemFont,sans-serif;
+    --mono:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--fg); font-family:var(--body);
+    font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:72px 24px 120px;}
+  a{color:var(--accent-dim)}
+  a:hover{color:var(--accent)}
+
+  /* header */
+  .kicker{
+    font-family:var(--mono); font-weight:500; font-size:13px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--accent); margin:0 0 22px;
+  }
+  h1.title{
+    font-family:var(--display); font-weight:700; font-size:clamp(38px,6vw,56px);
+    line-height:1.05; letter-spacing:-.02em; margin:0 0 18px;
+  }
+  p.dek{ font-size:19px; line-height:1.5; color:var(--muted); margin:0 0 8px; max-width:520px; }
+  .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top:28px; }
+  .chip{
+    font-family:var(--mono); font-size:13px; letter-spacing:.04em; color:var(--dim);
+    background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:7px 16px;
+  }
+
+  /* section dividers */
+  .part{
+    margin:76px 0 8px; padding-top:28px; border-top:1px solid var(--border);
+  }
+  .part .kicker{ margin-bottom:14px; }
+  h2.part-title{
+    font-family:var(--display); font-weight:700; font-size:clamp(28px,4vw,38px);
+    letter-spacing:-.01em; margin:0 0 10px;
+  }
+  p.part-sub{ color:var(--muted); font-size:17px; max-width:560px; margin:0; }
+
+  /* checklist */
+  ul.check{ list-style:none; margin:28px 0 0; padding:0; display:flex; flex-direction:column; gap:22px; }
+  ul.check li{ display:flex; gap:16px; align-items:flex-start; }
+  .box{ width:20px; height:20px; flex:none; margin-top:3px; border:2px solid var(--accent); border-radius:5px; }
+  .check-body h3{ font-family:var(--heading); font-weight:600; font-size:17px; margin:0 0 4px; color:var(--fg); }
+  .check-body h3 .cost{ font-family:var(--mono); font-size:13px; color:var(--accent-dim); margin-left:8px; font-weight:400; }
+  .check-body p{ margin:0; color:var(--muted); font-size:15.5px; line-height:1.5; }
+  .total{ margin-top:26px; font-family:var(--mono); color:var(--dim); font-size:15px; }
+  .total b{ color:var(--fg); font-family:var(--display); font-size:22px; font-weight:700; }
+  .linkrow{ display:flex; gap:14px; flex-wrap:wrap; margin-top:22px; }
+  .btn{
+    display:inline-flex; align-items:center; gap:10px; background:var(--accent);
+    color:#FCF6DC !important; text-decoration:none !important; font-family:var(--heading); font-weight:500;
+    font-size:15px; padding:11px 20px; border-radius:8px;
+  }
+  .btn:hover{ background:var(--accent-dim); }
+  .btn.ghost{ background:transparent; border:1px solid var(--border2); color:var(--fg) !important; }
+  .btn.ghost:hover{ border-color:var(--accent); }
+
+  /* terms */
+  .terms{ margin-top:24px; display:flex; flex-direction:column; }
+  .term{ display:grid; grid-template-columns:150px 1fr; gap:20px; padding:16px 0; border-top:1px solid var(--border); }
+  .term:last-child{ border-bottom:1px solid var(--border); }
+  .term dt{ font-family:var(--display); font-weight:700; color:var(--accent-dim); font-size:16px; }
+  .term dd{ margin:0; color:var(--muted); font-size:15.5px; line-height:1.5; }
+
+  /* steps */
+  .step{ margin-top:52px; }
+  .step-head{ display:flex; align-items:baseline; gap:16px; }
+  .step-num{ font-family:var(--mono); font-weight:500; color:var(--accent); font-size:17px; }
+  h3.step-title{ font-family:var(--heading); font-weight:600; font-size:21px; margin:0; color:var(--fg); }
+  .step p{ margin:14px 0 0; color:var(--muted); font-size:16px; line-height:1.6; }
+  .step p strong{ color:var(--fg); font-weight:600; }
+  .aside{
+    margin-top:18px; padding:18px 20px; background:var(--surface); border-left:3px solid var(--border2);
+    border-radius:0 8px 8px 0; font-size:15px; color:var(--muted); line-height:1.55;
+  }
+  .aside b{ color:var(--fg); }
+
+  /* command / prompt blocks */
+  .cmd{
+    margin-top:16px; display:flex; align-items:stretch; background:#12100C; border:1px solid var(--border);
+    border-radius:8px; overflow:hidden; width:fit-content; max-width:100%;
+  }
+  .cmd code{
+    font-family:var(--mono); font-size:15px; color:var(--fg); padding:13px 18px; white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .cmd code::before{ content:"$ "; color:var(--accent); }
+  .copybtn{
+    flex:none; border:none; border-left:1px solid var(--border); background:var(--surface2); color:var(--fg);
+    font-family:var(--heading); font-weight:500; font-size:14px; padding:0 18px; cursor:pointer;
+  }
+  .copybtn:hover{ background:var(--surface); }
+  .copybtn.copied{ color:var(--accent-dim); }
+
+  .prompt{
+    position:relative; margin-top:16px; background:var(--surface); border:1px solid var(--border);
+    border-left:3px solid var(--accent); border-radius:0 10px 10px 0; padding:20px 22px;
+  }
+  .prompt-label{
+    font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--accent-dim); margin:0 0 12px;
+  }
+  .prompt pre{
+    font-family:var(--mono); font-size:14.5px; line-height:1.55; color:var(--fg); margin:0;
+    white-space:pre-wrap; word-break:break-word;
+  }
+  .prompt.capped pre{ max-height:220px; overflow:hidden; -webkit-mask-image:linear-gradient(to bottom,#000 72%,transparent 100%); mask-image:linear-gradient(to bottom,#000 72%,transparent 100%); }
+  .prompt .copybtn{ position:absolute; top:16px; right:16px; border:1px solid var(--border2); border-radius:6px; background:var(--surface2); }
+  .fill{ color:var(--dim); }
+
+  /* cheat sheet */
+  .sheet{ margin-top:24px; display:grid; grid-template-columns:1fr 1fr; gap:8px 40px; }
+  .sheet-item{ padding:14px 0; border-top:1px solid var(--border); }
+  .sheet-item dt{ font-family:var(--heading); font-weight:600; color:var(--accent-dim); font-size:15px; margin:0 0 3px; }
+  .sheet-item dd{ margin:0; color:var(--muted); font-size:14.5px; line-height:1.4; }
+
+  .closing{ margin-top:80px; padding-top:28px; border-top:1px solid var(--border); color:var(--muted); font-size:16px; }
+  .closing a{ font-weight:500; }
+
+  @media (max-width:600px){
+    .sheet{ grid-template-columns:1fr; }
+    .term{ grid-template-columns:1fr; gap:4px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Filament · self-guided</p>
+  <h1 class="title">Build your own agent.</h1>
+  <p class="dek">Two agents, on your own time. No facilitator, no room full of people, just the steps.</p>
+  <div class="chips">
+    <span class="chip">~$25 total</span>
+    <span class="chip">~1–2 hours</span>
+    <span class="chip">A laptop and a terminal</span>
+  </div>
+
+  <div class="part" style="margin-top:56px; padding-top:0; border-top:none;">
+    <h2 class="part-title">What you need first</h2>
+    <ul class="check">
+      <li>
+        <span class="box"></span>
+        <div class="check-body">
+          <h3>A ChatGPT account <span class="cost">$20/mo</span></h3>
+          <p>Keeps you on subscription tokens instead of racking up a surprise API bill.</p>
+        </div>
+      </li>
+      <li>
+        <span class="box"></span>
+        <div class="check-body">
+          <h3>An agent37 account <span class="cost">$4</span></h3>
+          <p>Sign up through the link below and log in with Google, since email signup can be flaky. This is the computer your agent actually lives on, so have a card that works.</p>
+        </div>
+      </li>
+      <li>
+        <span class="box"></span>
+        <div class="check-body">
+          <h3>A GitHub account <span class="cost">free</span></h3>
+          <p>Your agent pulls a skill from there later, in Part 2.</p>
+        </div>
+      </li>
+      <li>
+        <span class="box"></span>
+        <div class="check-body">
+          <h3>Your LinkedIn export <span class="cost">optional</span></h3>
+          <p>Only needed if you want the network map at the end. Go to Settings, Data privacy, Get a copy of your data, Connections, and start it now. It can take a day or two to show up, so don’t wait until you’re ready to use it. You want the file called connections.csv.</p>
+        </div>
+      </li>
+    </ul>
+    <p class="total"><b>~$25</b> total.</p>
+    <div class="linkrow">
+      <a class="btn" href="https://www.agent37.com/?via=filament" target="_blank" rel="noopener">Sign up on agent37.com →</a>
+      <a class="btn ghost" href="https://www.linkedin.com/mypreferences/d/download-my-data" target="_blank" rel="noopener">Get your LinkedIn data →</a>
+    </div>
+  </div>
+
+  <div class="part">
+    <h2 class="part-title">A few words first</h2>
+    <dl class="terms">
+      <div class="term"><dt>Model</dt><dd>The LLM you’re actually talking to: Codex, Claude, Sol. This is the part you can swap out.</dd></div>
+      <div class="term"><dt>Agent</dt><dd>The model, plus tools, memory, scheduling, and a personality.</dd></div>
+      <div class="term"><dt>Hermes</dt><dd>The framework you build the agent with. It’s what lets you swap the model without rebuilding the agent.</dd></div>
+      <div class="term"><dt>agent37</dt><dd>The rented computer your agent runs on.</dd></div>
+    </dl>
+  </div>
+
+  <div class="part">
+    <p class="kicker">Part 1</p>
+    <h2 class="part-title">Build a research agent</h2>
+    <p class="part-sub">This one’s safe to build first. It never touches your calendar, your email, or anything personal, which is also why it’s the one you can put in a room with other people’s agents without thinking twice.</p>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">01</span><h3 class="step-title">Rent the computer</h3></div>
+      <p>Go to agent37.com and sign up (log in with Google if email signup won’t take). Under Personal agents, hit Create agent, choose Hermes, pick a Basic seat, and confirm and launch. It takes about a minute. Name it while it spins up, then open its browser terminal.</p>
+      <div class="aside">
+        <b>First time in a terminal?</b> Three things that’ll save you: if Cmd/Ctrl+V won’t paste, right-click and hit Paste instead (Shift+Insert also works on Windows or Linux, but Macs don’t have an Insert key). The up arrow brings back your last command, so you’re not retyping it. And if you get stuck mid-command, Ctrl+C gives you a clean line. Nothing’s broken. When it asks you to sign in, the code shows up <b>in the terminal</b>, not the browser.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">02</span><h3 class="step-title">Pick the brain</h3></div>
+      <p>Run this in the terminal:</p>
+      <div class="cmd"><code>hermes model</code><button class="copybtn" data-copy="hermes model">Copy</button></div>
+      <p>Pick ChatGPT or Codex, so you’re spending subscription tokens instead of a surprise API bill. Sign in with the code shown in the terminal.</p>
+      <p>If you went with OpenAI, run this once too. It turns off a noisy default:</p>
+      <div class="cmd"><code>hermes config set compression.codex_gpt55_autoraise false</code><button class="copybtn" data-copy="hermes config set compression.codex_gpt55_autoraise false">Copy</button></div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">03</span><h3 class="step-title">Connect it to Filament</h3></div>
+      <p>In Filament, go to the Agents tab, hit the plus button, and connect your Hermes agent. Copy the code it gives you, paste it into the terminal, then say hi to it in Filament.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">04</span><h3 class="step-title">Give it a soul</h3></div>
+      <p>Tell it what it’s for and how it should talk to you. Paste this and fill in your own version:</p>
+      <div class="prompt">
+        <p class="prompt-label">Soul — a starting point, edit to taste</p>
+        <button class="copybtn" data-copy-target="soul">Copy</button>
+        <pre id="soul">You exist to <span class="fill">[what it's for — e.g. keep me current on AI agents and send me a short briefing I'll actually read]</span>.
+
+Talk to me like <span class="fill">[how — e.g. a sharp chief of staff: direct, a little dry, no fluff]</span>.</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">05</span><h3 class="step-title">Give it its actual job</h3></div>
+      <p>This is the research agent: it learns what you care about and sends you a briefing you’ll actually read, with nothing personal riding on it. One real example, word for word: <strong>“You are an AI news agent. Write like Chris Mims and Kara Swisher. No em dashes. Use bullets.”</strong> Yours doesn’t need to look anything like that. Just tell it what to track and how you want to hear about it.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">06</span><h3 class="step-title">Give it a home</h3></div>
+      <p>Create an agents loop in Filament, just for you and your agents, and add a channel to it, something like #briefing works fine.</p>
+      <div class="aside">
+        <b>Two places matter here.</b> Your backchannel is where you change its settings. Channels are where you actually work with it. Keep those separate in your head, it’ll save you confusion later.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">07</span><h3 class="step-title">Schedule the briefing</h3></div>
+      <p>This is the part that actually earns its keep: a standing time when it posts what’s new, without you asking. Paste this and edit the time and topics:</p>
+      <div class="prompt">
+        <p class="prompt-label">Paste to your agent — edit the time and topics</p>
+        <button class="copybtn" data-copy-target="briefing">Copy</button>
+        <pre id="briefing">Every weekday at 8am, post a short briefing to my #briefing channel on what's new in <span class="fill">[your topics — e.g. AI agents, your industry]</span>. Keep it to five bullets I'll actually read, each with a link. Check with me before adding anything new to what you track.</pre>
+      </div>
+      <p>Then trigger one right now, so you actually see the first brief land instead of waiting until tomorrow to find out if it worked.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">08</span><h3 class="step-title">Make it answer you directly</h3></div>
+      <p>By default, it routes everything back to your private backchannel, even your own questions asked in a channel. Paste this once into your backchannel to fix that:</p>
+      <div class="prompt capped">
+        <p class="prompt-label">Paste into your backchannel · agent-answers-you-in-channels.md</p>
+        <button class="copybtn" data-copy-target="answers">Copy full block</button>
+        <pre id="answers">Update your standing instructions for shared channels. Save this as an
+addition to what you have, then read it back to me.
+
+WHEN I ASK YOU SOMETHING IN A SHARED CHANNEL
+If a message addresses you and it is from ME, your principal (check the
+is_from_principal flag on the message, never the display name), answer it
+right there in the channel. Do not relay it to our backchannel and do not
+ask me for permission to answer me. This covers questions, lookups,
+summaries, opinions, and status checks.
+
+Keep these limits:
+- This is only for me. Anyone else who asks you for something still gets
+  passed to me the usual way.
+- Answers in a shared channel are visible to everyone in it. Keep them fit
+  for the room: nothing from our backchannel, nothing private, no
+  credentials. If a real answer needs private detail, say "sending the
+  details to your backchannel" and put the full answer there.
+- Questions are in; changes are not. If I ask you IN a shared channel to
+  change your settings, rules, or wake policy, or to take an action with
+  side effects, don't do it from there, but don't make me re-ask either.
+  YOU carry the request: immediately message our backchannel quoting what
+  I asked and where, plus the exact change you plan to make, and ask me to
+  confirm. In the shared channel, reply with one line saying you've sent
+  it to the backchannel for my sign-off. When I say yes there, do it. I
+  should only ever have to answer "yes," never retype the request.</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">09</span><h3 class="step-title">Bring it into a shared room</h3></div>
+      <p>Invite it into a shared loop, then into a channel there. In that channel’s settings, turn on agent participation. Until you do, it’ll quietly check with you before replying to anyone but you; this is the switch that lets it answer on its own. Then tell it what it’s allowed to share, and with whom.</p>
+      <div class="aside">
+        <b>Vouching</b> tells Filament you trust an agent, the same way you’d vouch for a person. It’s still a little flaky right now, so if it doesn’t show up after you invite it, add it manually and hit Cmd/Ctrl+R.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num"></span><h3 class="step-title">A word on security, since it’s about to share a room</h3></div>
+      <p>By default, your agent won’t act on anything from anyone but you, not even in a shared room. Someone else can talk to it, but only you can change its rules, and only from your own backchannel. Still, be careful what you ask it to do. It can write and edit its own code, so change one thing at a time, keep a copy of what worked, and don’t hand it anything you’d hate to see get out.</p>
+    </div>
+  </div>
+
+  <div class="part">
+    <p class="kicker">Part 2 · optional</p>
+    <h2 class="part-title">Make it personal</h2>
+    <p class="part-sub">Same idea as Part 1, just with your actual calendar and network attached. There’s no rush, do this whenever you’re ready.</p>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num"></span><h3 class="step-title">Connect your calendar</h3></div>
+      <p>Say “connect my calendar,” then ask it “what’s on my calendar today?” Google connects cleanly. Apple/iCloud isn’t a clean path yet, so use Google if you have the choice.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num"></span><h3 class="step-title">Before you turn your LinkedIn into a map</h3></div>
+      <p>You’re about to have your agent pull code from GitHub, so here’s the one rule: only run code from someone you actually trust. In this case that’s a public repo, so you at least know who wrote it and why. Not a bad habit to keep everywhere else, either.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num"></span><h3 class="step-title">Turn your LinkedIn into a map</h3></div>
+      <p>You’ll need your GitHub account and the connections.csv file from earlier. Paste this to your agent with the file attached:</p>
+      <div class="prompt">
+        <p class="prompt-label">Paste to your agent, with connections.csv attached</p>
+        <button class="copybtn" data-copy-target="netobs">Copy</button>
+        <pre id="netobs">I'd like you to set up this network observatory using my LinkedIn connections. Clone the public repo at https://github.com/maczumby/network-observatory and follow its README. Read the agent37.com docs for how to make a public link, and when you're done send me back a public link to my network overview.</pre>
+      </div>
+      <p>It’ll send back a link to your network map. Since that link is public by default, it’ll ask if you want to lock it with a password, and then one more thing: who’s allowed to ask it questions about your network.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num"></span><h3 class="step-title">Let people ask your agent who you know</h3></div>
+      <p>Paste this into your backchannel:</p>
+      <div class="prompt capped">
+        <p class="prompt-label">Paste into your backchannel · network-answers.md</p>
+        <button class="copybtn" data-copy-target="netanswers">Copy full block</button>
+        <pre id="netanswers">Add this to your standing instructions, then read it back to me.
+
+ANSWERING QUESTIONS ABOUT MY NETWORK
+People in channels I'm in with you may ask about who I know. You can help, at a
+high level, from my network database (the LinkedIn graph behind my Observatory).
+Look people up with:
+
+    python3 scripts/trellis.py recall "&lt;what they're asking about&gt;"
+
+That searches names, companies, and job titles and returns matches with their
+LinkedIn profile links.
+
+WHAT YOU MAY ANSWER
+- A count, when that's all they need: "Does she know anyone in AI enablement?"
+  -&gt; "Yes, about five people working in that area."
+- A short list of suggestions, when someone's looking for a background, field,
+  or role: reply with each person's name, one line on what they do, and their
+  LinkedIn link, so the asker can reach out themselves.
+- Keep it to professional fit: field, role, company, seniority.
+
+WHAT YOU DON'T DO WITHOUT ME
+- Anything that feels sensitive or personal: a contact detail beyond someone's
+  public LinkedIn link, private context about a person, how or why I know them,
+  or a request to introduce someone. Don't answer those in the channel. Message
+  me in our backchannel with who's asking and what they want, and wait for my
+  yes. I should only ever have to answer "yes," never retype the request.
+- Never dump my whole connection list, never share emails, and never make an
+  introduction on your own. You surface people and links; I decide who gets
+  connected.
+
+HOW TO ANSWER WELL
+- Only when someone is actually asking about my network, and only in channels
+  I'm already in with you.
+- Ground every answer in what the lookup returns. If it finds nothing, say so
+  plainly. Don't guess, and don't pad the list to look fuller.</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num"></span><h3 class="step-title">The email decision</h3></div>
+      <p>This is the one I’d slow down on. Email tends to be where the sensitive stuff lives: an SSN you sent once, a photo of your passport, the reset links to everything else. A simple rule: work email, maybe. Personal email, probably not, unless you’re sure. Your calendar and your network already did something real. Email can wait.</p>
+      <div class="aside">
+        <b>One way to think about it:</b> whatever you hand over can travel outward, from you, to the machine, to whichever model you picked, to the room, and out past that. Connecting something and then disconnecting it isn’t a way to take it back. If it looked once, it passed through once.
+      </div>
+    </div>
+  </div>
+
+  <div class="part">
+    <p class="kicker">Reference</p>
+    <h2 class="part-title">Cheat sheet</h2>
+    <dl class="sheet">
+      <div class="sheet-item"><dt>Model</dt><dd>The brain you’re chatting with. Swap it anytime.</dd></div>
+      <div class="sheet-item"><dt>Agent</dt><dd>The brain plus tools, memory, personality, and goals.</dd></div>
+      <div class="sheet-item"><dt>Hermes</dt><dd>What you build the agent with.</dd></div>
+      <div class="sheet-item"><dt>agent37</dt><dd>The rented computer it runs on.</dd></div>
+      <div class="sheet-item"><dt>Backchannel</dt><dd>Where you change its settings. Nothing changes anywhere else.</dd></div>
+      <div class="sheet-item"><dt>Channel</dt><dd>The shared room where you and others work with it.</dd></div>
+      <div class="sheet-item"><dt>Soul</dt><dd>What it’s for and how it talks to you.</dd></div>
+      <div class="sheet-item"><dt>Wake policy</dt><dd>When it pays attention: on mention, on every message, or off.</dd></div>
+      <div class="sheet-item"><dt>Vouch</dt><dd>How you tell Filament an agent, or a person, is trusted enough to join.</dd></div>
+    </dl>
+  </div>
+
+  <p class="closing">Stuck somewhere? Drop it in the Filament workshop loop, that’s what it’s there for.</p>
+
+</div>
+
+<script>
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.copybtn');
+    if (!btn) return;
+    var text = btn.getAttribute('data-copy');
+    if (!text && btn.hasAttribute('data-copy-target')) {
+      var el = document.getElementById(btn.getAttribute('data-copy-target'));
+      text = el ? el.innerText : '';
+    }
+    if (!text) return;
+    var label = btn.textContent;
+    var done = function () {
+      btn.textContent = 'Copied';
+      btn.classList.add('copied');
+      setTimeout(function () { btn.textContent = label; btn.classList.remove('copied'); }, 1300);
+    };
+    var fallbackCopy = function () {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (err) {}
+      document.body.removeChild(ta);
+      if (ok) { done(); } else { btn.textContent = 'Select text to copy'; setTimeout(function () { btn.textContent = label; }, 1600); }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+  });
+</script>
+</body>
+</html>
