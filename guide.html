@@ -169,7 +169,7 @@
         <span class="box"></span>
         <div class="check-body">
           <h3>An agent37 account <span class="cost">$4</span></h3>
-          <p>Sign up through the link below and log in with Google, since email signup can be flaky. This is the computer your agent actually lives on, so have a card that works.</p>
+          <p>Sign up through the link below and log in with Google, since email signup can be flaky. This is the computer your agent lives on, so have a card that works.</p>
         </div>
       </li>
       <li>
@@ -197,7 +197,7 @@
   <div class="part">
     <h2 class="part-title">A few words first</h2>
     <dl class="terms">
-      <div class="term"><dt>Model</dt><dd>The LLM you’re actually talking to: Codex, Claude, Sol. This is the part you can swap out.</dd></div>
+      <div class="term"><dt>Model</dt><dd>The LLM you’re talking to: Codex, Claude, Sol. This is the part you can swap out.</dd></div>
       <div class="term"><dt>Agent</dt><dd>The model, plus tools, memory, scheduling, and a personality.</dd></div>
       <div class="term"><dt>Hermes</dt><dd>The framework you build the agent with. It’s what lets you swap the model without rebuilding the agent.</dd></div>
       <div class="term"><dt>agent37</dt><dd>The rented computer your agent runs on.</dd></div>
@@ -228,7 +228,7 @@
 
     <div class="step">
       <div class="step-head"><span class="step-num">03</span><h3 class="step-title">Connect it to Filament</h3></div>
-      <p>In Filament, go to the Agents tab, hit the plus button, and connect your Hermes agent. Copy the code it gives you, paste it into the terminal, then say hi to it in Filament.</p>
+      <p>In Filament, go to the Agents tab, hit the plus button, and connect your Hermes agent. Copy the code it gives you, paste it into the terminal, then say hi to it in Filament. Wherever you just did that becomes its admin channel (backchannel) by default: the one place you can change its settings.</p>
     </div>
 
     <div class="step">
@@ -252,7 +252,7 @@ Talk to me like <span class="fill">[how — e.g. a sharp chief of staff: direct,
       <div class="step-head"><span class="step-num">06</span><h3 class="step-title">Give it a home</h3></div>
       <p>Create an agents loop in Filament, just for you and your agents, and add a channel to it, something like #briefing works fine.</p>
       <div class="aside">
-        <b>Two places matter here.</b> Your backchannel is where you change its settings. Channels are where you actually work with it. Keep those separate in your head, it’ll save you confusion later.
+        <b>Two places matter here.</b> Your admin channel, also called your backchannel, is where you change its settings. By default that’s whichever channel you connected it in, though you can promote another channel to have the same powers later if you want. Regular channels are where you work with it, alongside other people. Keep those two separate in your head, it’ll save you confusion later.
       </div>
     </div>
 
@@ -307,11 +307,9 @@ Keep these limits:
       <div class="aside">
         <b>Vouching</b> tells Filament you trust an agent, the same way you’d vouch for a person. It’s still a little flaky right now, so if it doesn’t show up after you invite it, add it manually and hit Cmd/Ctrl+R.
       </div>
-    </div>
-
-    <div class="step">
-      <div class="step-head"><span class="step-num"></span><h3 class="step-title">A word on security, since it’s about to share a room</h3></div>
-      <p>By default, your agent won’t act on anything from anyone but you, not even in a shared room. Someone else can talk to it, but only you can change its rules, and only from your own backchannel. Still, be careful what you ask it to do. It can write and edit its own code, so change one thing at a time, keep a copy of what worked, and don’t hand it anything you’d hate to see get out.</p>
+      <div class="aside">
+        <b>On security:</b> by default, your agent won’t act on anything from anyone but you, not even in a shared room. Someone else can talk to it, but only you can change its rules, and only from your own backchannel. Still, be careful what you ask it to do. It can write and edit its own code, so change one thing at a time, keep a copy of what worked, and don’t hand it anything you’d hate to see get out.
+      </div>
     </div>
   </div>
 
@@ -321,28 +319,18 @@ Keep these limits:
     <p class="part-sub">Same idea as Part 1, just with your actual calendar and network attached. There’s no rush, do this whenever you’re ready.</p>
 
     <div class="step">
-      <div class="step-head"><span class="step-num"></span><h3 class="step-title">Connect your calendar</h3></div>
+      <div class="step-head"><span class="step-num">01</span><h3 class="step-title">Connect your calendar</h3></div>
       <p>Say “connect my calendar,” then ask it “what’s on my calendar today?” Google connects cleanly. Apple/iCloud isn’t a clean path yet, so use Google if you have the choice.</p>
     </div>
 
     <div class="step">
-      <div class="step-head"><span class="step-num"></span><h3 class="step-title">Before you turn your LinkedIn into a map</h3></div>
-      <p>You’re about to have your agent pull code from GitHub, so here’s the one rule: only run code from someone you actually trust. In this case that’s a public repo, so you at least know who wrote it and why. Not a bad habit to keep everywhere else, either.</p>
-    </div>
-
-    <div class="step">
-      <div class="step-head"><span class="step-num"></span><h3 class="step-title">Turn your LinkedIn into a map</h3></div>
-      <p>You’ll need your GitHub account and the connections.csv file from earlier. Paste this to your agent with the file attached:</p>
-      <div class="prompt">
-        <p class="prompt-label">Paste to your agent, with connections.csv attached</p>
-        <button class="copybtn" data-copy-target="netobs">Copy</button>
-        <pre id="netobs">I'd like you to set up this network observatory using my LinkedIn connections. Clone the public repo at https://github.com/maczumby/network-observatory and follow its README. Read the agent37.com docs for how to make a public link, and when you're done send me back a public link to my network overview.</pre>
-      </div>
+      <div class="step-head"><span class="step-num">02</span><h3 class="step-title">Turn your LinkedIn into a map</h3></div>
+      <p>You’ll need your GitHub account and the connections.csv file from earlier. This one clones a repo of mine, so instead of a public copy-paste block on a page anyone could land on, message me in your Filament group, or DM me there, and I’ll send you the instruction to paste to your agent.</p>
       <p>It’ll send back a link to your network map. Since that link is public by default, it’ll ask if you want to lock it with a password, and then one more thing: who’s allowed to ask it questions about your network.</p>
     </div>
 
     <div class="step">
-      <div class="step-head"><span class="step-num"></span><h3 class="step-title">Let people ask your agent who you know</h3></div>
+      <div class="step-head"><span class="step-num">03</span><h3 class="step-title">Let people ask your agent who you know</h3></div>
       <p>Paste this into your backchannel:</p>
       <div class="prompt capped">
         <p class="prompt-label">Paste into your backchannel · network-answers.md</p>
@@ -386,7 +374,7 @@ HOW TO ANSWER WELL
     </div>
 
     <div class="step">
-      <div class="step-head"><span class="step-num"></span><h3 class="step-title">The email decision</h3></div>
+      <div class="step-head"><span class="step-num">04</span><h3 class="step-title">The email decision</h3></div>
       <p>This is the one I’d slow down on. Email tends to be where the sensitive stuff lives: an SSN you sent once, a photo of your passport, the reset links to everything else. A simple rule: work email, maybe. Personal email, probably not, unless you’re sure. Your calendar and your network already did something real. Email can wait.</p>
       <div class="aside">
         <b>One way to think about it:</b> whatever you hand over can travel outward, from you, to the machine, to whichever model you picked, to the room, and out past that. Connecting something and then disconnecting it isn’t a way to take it back. If it looked once, it passed through once.
@@ -402,7 +390,7 @@ HOW TO ANSWER WELL
       <div class="sheet-item"><dt>Agent</dt><dd>The brain plus tools, memory, personality, and goals.</dd></div>
       <div class="sheet-item"><dt>Hermes</dt><dd>What you build the agent with.</dd></div>
       <div class="sheet-item"><dt>agent37</dt><dd>The rented computer it runs on.</dd></div>
-      <div class="sheet-item"><dt>Backchannel</dt><dd>Where you change its settings. Nothing changes anywhere else.</dd></div>
+      <div class="sheet-item"><dt>Backchannel</dt><dd>Also called your admin channel. Where you change its settings by default. Nothing changes anywhere else, unless you promote another channel to share the powers.</dd></div>
       <div class="sheet-item"><dt>Channel</dt><dd>The shared room where you and others work with it.</dd></div>
       <div class="sheet-item"><dt>Soul</dt><dd>What it’s for and how it talks to you.</dd></div>
       <div class="sheet-item"><dt>Wake policy</dt><dd>When it pays attention: on mention, on every message, or off.</dd></div>
@@ -410,7 +398,7 @@ HOW TO ANSWER WELL
     </dl>
   </div>
 
-  <p class="closing">Stuck somewhere? Drop it in the Filament workshop loop, that’s what it’s there for.</p>
+  <p class="closing">Stuck somewhere? If you’re already in a Filament loop with me, drop it there. Otherwise, message me at <a href="mailto:mari@filament.dm">mari@filament.dm</a>.</p>
 
 </div>
 
