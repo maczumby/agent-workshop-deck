@@ -89,11 +89,17 @@
   h3.step-title{ font-family:var(--heading); font-weight:600; font-size:21px; margin:0; color:var(--fg); }
   .step p{ margin:14px 0 0; color:var(--muted); font-size:16px; line-height:1.6; }
   .step p strong{ color:var(--fg); font-weight:600; }
+  .step p code, .aside code{ font-family:var(--mono); font-size:.9em; color:var(--fg); background:var(--surface2); padding:2px 7px; border-radius:5px; }
   .aside{
     margin-top:18px; padding:18px 20px; background:var(--surface); border-left:3px solid var(--border2);
     border-radius:0 8px 8px 0; font-size:15px; color:var(--muted); line-height:1.55;
   }
   .aside b{ color:var(--fg); }
+
+  /* inline screenshot */
+  .shot{ margin-top:18px; }
+  .shot img{ display:block; width:100%; max-width:560px; border:1px solid var(--border); border-radius:10px; }
+  .shot figcaption{ font-family:var(--mono); font-size:13px; color:var(--dim); margin-top:10px; }
 
   /* command / prompt blocks */
   .cmd{
@@ -211,7 +217,11 @@
 
     <div class="step">
       <div class="step-head"><span class="step-num">01</span><h3 class="step-title">Rent the computer</h3></div>
-      <p>Go to agent37.com and sign up (log in with Google if email signup won’t take). Under Personal agents, hit Create agent, choose Hermes, pick a Basic seat, and confirm and launch. It takes about a minute. Name it while it spins up, then open its browser terminal.</p>
+      <p>Go to agent37.com and sign up (log in with Google if email signup won’t take). Under Personal agents, hit Create agent, choose Hermes, pick a Basic seat, and confirm and launch. It takes about a minute. Name it while it spins up, then open its browser terminal: it’s the <code>&gt;_</code> icon in the row of buttons at the top right.</p>
+      <figure class="shot">
+        <img src="assets/ws-open-terminal.png" alt="The agent toolbar, with the terminal icon highlighted in the top-right row of buttons">
+        <figcaption>the &gt;_ button, top right</figcaption>
+      </figure>
       <div class="aside">
         <b>First time in a terminal?</b> Three things that’ll save you: if Cmd/Ctrl+V won’t paste, right-click and hit Paste instead (Shift+Insert also works on Windows or Linux, but Macs don’t have an Insert key). The up arrow brings back your last command, so you’re not retyping it. And if you get stuck mid-command, Ctrl+C gives you a clean line. Nothing’s broken. When it asks you to sign in, the code shows up <b>in the terminal</b>, not the browser.
       </div>
